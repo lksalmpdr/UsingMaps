@@ -8,43 +8,56 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var mainMap: MKMapView!
+    
+    var locationMngr = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set initial location
-//        let initialLocation = CLLocation(latitude: -23.426273, longitude: -46.481674)
+        locationMngr.delegate = self
+        locationMngr.desiredAccuracy = kCLLocationAccuracyBest
+        locationMngr.requestWhenInUseAuthorization()
+        locationMngr.startUpdatingLocation()
 
-//        mainMap.centerToLocation(initialLocation)
-        let latitude: CLLocationDegrees = -23.426273
-        let longitude: CLLocationDegrees = -46.481674
+//        let latitude: CLLocationDegrees = -23.426273
+//        let longitude: CLLocationDegrees = -46.481674
+//
+//        let deltaLatitude: CLLocationDegrees = 0.01
+//        let deltaLongitude: CLLocationDegrees = 0.01
+//
+//        let localizacao: CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
+//
+//        let visualArea: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta:deltaLatitude, longitudeDelta:deltaLongitude)
+//
+//        let region: MKCoordinateRegion = MKCoordinateRegion(center: localizacao, span: visualArea)
+//
+//        mainMap.setRegion(region, animated: true)
+//
+//        let annotation = MKPointAnnotation()
+//        annotation.coordinate = localizacao
+//        annotation.title = "Saída para o Brasil"
+//        annotation.subtitle = "A única saída para esse país maldito"
+//
+//        mainMap.addAnnotation(annotation)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocatioin = locations.last!
+        let latitude: CLLocationDegrees = userLocatioin.coordinate.latitude
+        let longitude: CLLocationDegrees = userLocatioin.coordinate.longitude
 
         let deltaLatitude: CLLocationDegrees = 0.01
         let deltaLongitude: CLLocationDegrees = 0.01
-        
+
         let localizacao: CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
-        
+
         let visualArea: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta:deltaLatitude, longitudeDelta:deltaLongitude)
 
         let region: MKCoordinateRegion = MKCoordinateRegion(center: localizacao, span: visualArea)
 
         mainMap.setRegion(region, animated: true)
     }
-
-
 }
-
-//private extension MKMapView {
-//  func centerToLocation(_ location: CLLocation, regionRadius: CLLocationDistance = 1000){
-//      let coordinateRegion = MKCoordinateRegion(
-//            center: location.coordinate,
-//            latitudinalMeters: regionRadius,
-//            longitudinalMeters: regionRadius)
-//      setRegion(coordinateRegion, animated: true)
-//  }
-//}
-
-
